@@ -3,8 +3,15 @@ An example of event sourcing implementation on .NET using Orleans and EventStore
 
 ## :scroll: Versions used:
 - .NET 8.0 (C# 12)
-- Orleans 
-- EventStore DB `v24.2.0`
+    - Microsoft.AspNetCore.OpenApi `8.0.0`
+    - Swashbuckle.AspNetCore `6.4.0`
+- Orleans 8.1.0
+    - Microsoft.Orleans.Core `8.1.0`
+    - Microsoft.Orleans.EventSourcing `8.1.0`
+- EventStore DB `24.2.0`
+    - EventStore.Client.Grpc.PersistentSubscriptions `23.2.1`
+    - EventStore.Client.Grpc.ProjectionManagement `23.2.1`
+    - EventStore.Client.Grpc.Streams `23.2.1`
 
 ## :incoming_envelope: Event Sourcing
 Event sourcing - is a technique of representing changes of the domain model in the form of sequence of incremental changes (events).
@@ -17,10 +24,10 @@ To get the state of the domain model at specific point of time - need to get the
 
 ### Terms:
 
-- Event - immutable information about data changes
-- State - aggregated data based on events which represents the state of the domain model in some point of time.
-- Stream - a sequence of events grouped by some condition.
-- Projection - some data model based on one or multiple streams of events
+- **Event** - immutable information about data changes
+- **State** - aggregated data based on events which represents the state of the domain model in some point of time.
+- **Stream** - a sequence of events grouped by some condition.
+- **Projection** - some data model based on one or multiple streams of events
 
 ### Benefits:
 - Provide the whole history of data changes which helps to investigate issues
@@ -55,7 +62,7 @@ await eventStoreProjectionManagementClient.EnableAsync("$by_category", cancellat
 
 ### Persistent event subscriptions
 
-## Actors
+## :bust_in_silhouette: Actors
 
 ## Orleans
 TBD
