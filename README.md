@@ -4,6 +4,9 @@ An example of event sourcing implementation on .NET using Orleans and EventStore
 ## Event Sourcing
 Event sourcing - is a technique of representing changes of the domain model in the form of sequence of incremental changes (events).
 
+![image](https://github.com/VladislavRybnikov/orleans-with-event-store-db/assets/32033837/ce42f70c-91ca-47a1-a510-8562c8dc2c05)
+
+
 ### Terms:
 
 - Event - immutable information about data changes
