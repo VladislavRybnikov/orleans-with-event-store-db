@@ -59,10 +59,28 @@ EventStore db has already pre-configured projectinons. One of the is projection 
 ```csharp
 await eventStoreProjectionManagementClient.EnableAsync("$by_category", cancellationToken: stoppingToken);
 ```
+To subscribe to the event stream - need to use `eventStoreClient.SubscribeToStream` method and if a stream is a projection - need to provide additional parameter `resolveLinkTos: true`.
+```csharp
+return eventStoreClient.SubscribeToStream(
+    stream, 
+    FromStream.Start,
+    resolveLinkTos: true,
+    cancellationToken: cancellationToken);
+```
 
 ### Persistent event subscriptions
+```csharp
+await eventStorePersistentSubscriptionsClient.CreateToStreamAsync(
+    stream,
+    groupName, 
+    new PersistentSubscriptionSettings(resolveLinkTos: true),
+    cancellationToken: cancellationToken);
+```
 
 ## :bust_in_silhouette: Actors
+
+![image](https://github.com/VladislavRybnikov/orleans-with-event-store-db/assets/32033837/fc0f242d-e59a-4931-852e-ab552590b1c5)
+
 
 ## Orleans
 TBD
@@ -73,3 +91,24 @@ TBD
 - Silo
 
 ### JournaledGrain
+
+```csharp
+public class AccountBalanceGrain(IStateRepository<AccountBalanceState> stateRepository)
+    : JournaledGrain<AccountBalanceState, IDomainEvent>
+...
+```
+
+### ICustomStorageInterface
+```csharp
+public async Task<KeyValuePair<int, AccountBalanceState>> ReadStateFromStorage()
+{
+    var state = await stateRepository.LoadAsync(this.GetPrimaryKeyString());
+    return new KeyValuePair<int, AccountBalanceState>(state.Version, state);
+}
+
+public async Task<bool> ApplyUpdatesToStorage(IReadOnlyList<IDomainEvent> updates, int expectedVersion)
+{
+    await stateRepository.SaveAsync(this.GetPrimaryKeyString(), expectedVersion, State, updates);
+    return true;
+}
+```
