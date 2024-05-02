@@ -11,6 +11,9 @@ Event sourcing - is a technique of representing changes of the domain model in t
 
 ![image](https://github.com/VladislavRybnikov/orleans-with-event-store-db/assets/32033837/ce42f70c-91ca-47a1-a510-8562c8dc2c05)
 
+To get the state of the domain model at specific point of time - need to get the events and apply them one-by-one on the model.
+
+![image](https://github.com/VladislavRybnikov/orleans-with-event-store-db/assets/32033837/a41965d7-33e0-4012-b28a-aae4d3fccc2a)
 
 ### Terms:
 
@@ -26,6 +29,31 @@ Event sourcing - is a technique of representing changes of the domain model in t
 
 ## EventStore DB
 TBD
+
+### Saving event
+```csharp
+await eventStoreClient.AppendToStreamAsync(
+    $"{StateType.Name}-{id}",
+    version == 0 ? StreamRevision.None : StreamRevision.FromInt64(version - 1), 
+    eventsData);
+```
+- The sceond param of the method - is expected version. If it is the first event in the stream than need to pass `StreamRevision.None`
+
+### Reading an event
+```csharp
+var stream = eventStoreClient.ReadStreamAsync(
+    Direction.Forwards,
+    $"{StateType.Name}-{id}",
+    streamPosition);
+```
+
+### Subscribing to event stream
+EventStore db has already pre-configured projectinons. One of the is projection by category (`$by-category`). It is enabled by default when passing `--run-projections=All` or it could be enabled programaticaly using `EventStore.Client.Grpc.ProjectionManagement` library.
+```csharp
+await eventStoreProjectionManagementClient.EnableAsync("$by_category", cancellationToken: stoppingToken);
+```
+
+### Persistent event subscriptions
 
 ## Actors
 
