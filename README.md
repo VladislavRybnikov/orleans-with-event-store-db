@@ -1,6 +1,8 @@
 # Orleans with EventStore DB
 An example of event sourcing implementation on .NET using Orleans and EventStoreDb.
 
+A simplified approach without orleans could be found here: [docs](src/OrleansPlusEventStoreDb.Demo/SimpleEventStoreDb.Demo/README.md)
+
 ## :scroll: Versions used:
 - .NET 8.0 (C# 12)
     - Microsoft.AspNetCore.OpenApi `8.0.0`
