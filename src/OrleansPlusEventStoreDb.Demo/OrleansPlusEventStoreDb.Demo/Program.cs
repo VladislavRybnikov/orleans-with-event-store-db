@@ -1,4 +1,3 @@
-using EventStore.Client;
 using Microsoft.AspNetCore.Mvc;
 using OrleansPlusEventStoreDb.Demo;
 using OrleansPlusEventStoreDb.Demo.Grains;

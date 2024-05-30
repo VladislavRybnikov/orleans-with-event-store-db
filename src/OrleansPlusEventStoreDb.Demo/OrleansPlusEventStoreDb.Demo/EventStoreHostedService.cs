@@ -25,20 +25,22 @@ public class EventStoreHostedService(
 
             var integrationEvent = new IntegrationEvent(aggregateId.ToString(), message.Event.MapToDomainEvent()!);
             
-            logger.LogWarning("Integration event: {DomainEvent}", integrationEvent.ToString());
+            logger.LogInformation("Integration event: {DomainEvent}", integrationEvent.ToString());
         }
     }
 
-    private async Task<IAsyncEnumerable<ResolvedEvent>> SubscribeAsync(string stream, string? group = null, CancellationToken cancellationToken = default)
+    private async Task<IAsyncEnumerable<ResolvedEvent>> SubscribeAsync(string stream, string? group = null, long? fromPosition = null, CancellationToken cancellationToken = default)
     {
         if (group != null)
         {
             return await SubscribeWithPersistentSubscriptionAsync(stream, group, cancellationToken);
         }
-        
+
         return eventStoreClient.SubscribeToStream(
             stream, 
-            FromStream.Start,
+            fromPosition.HasValue
+                ? FromStream.After(StreamPosition.FromInt64(fromPosition.Value))
+                : FromStream.End,
             resolveLinkTos: true,
             cancellationToken: cancellationToken);
     }
